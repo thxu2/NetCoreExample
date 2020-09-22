@@ -1,0 +1,60 @@
+﻿@page "/mystorieslist"
+@using Microsoft.AspNetCore.Authorization
+@using SampleUi.Models
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+
+<div class="row justify-content-center">
+    <div class="col-4">
+        <h1>Мои Рассказы</h1>
+        <RadzenButton Click="AddStory" Text="Написать рассказ" Style="margin-bottom: 20px; width: 150px" ButtonStyle="ButtonStyle.Primary"/>
+
+
+        @if (_todoLists == null)
+        {
+            <p>
+                <em>Loading...</em>
+            </p>
+        }
+        else
+        {
+            <RadzenAccordion>
+                <Items>
+                    @foreach (var list in _todoLists)
+                    {
+                        <RadzenAccordionItem Text="@list.Name">
+                            @foreach (var item in list.Items)
+                            {
+                                <div>
+                                    @item.Name
+                                </div>
+                            }
+                        </RadzenAccordionItem>
+                    }
+                </Items>
+            </RadzenAccordion>
+            <br/>
+        }
+    </div>
+</div>
+
+@code {
+
+    private TodoList[] _todoLists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();   
+        _todoLists = await Http.GetFromJsonAsync<TodoList[]>(
+            $"https://localhost:5002/TodoList/{state.User.Identity.Name}");
+    }
+
+    private void AddStory()
+    {
+        Navigation.NavigateTo("addstory");
+    }
+
+}

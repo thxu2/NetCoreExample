@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  identity:
+    build:
+      context: ./Identity
+      dockerfile: Dockerfile
+    ports:
+      - 5000:443
+      - 5003:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5000
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - IDENTITY_ISSUER=https://10.0.75.1:5000
+    volumes:
+      - ./https/aspnetapp.pfx:/https/aspnetapp.pfx:ro
+    networks:
+      - mytell-net
+
+  sampleui:
+    build:
+      context: ./SampleUi
+      dockerfile: Dockerfile
+    ports:
+      - 5001:80
+    networks:
+      - mytell-net
+
+ sampleapi:
+    build:
+      context: ./SampleApi
+      dockerfile: Dockerfile
+    ports:
+      - 5002:443
+    networks:
+      - mytell-net
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5002
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - IDENTITY_AUTHORITY=http://identity
+    volumes:
+      - ./https/aspnetapp.pfx:/https/aspnetapp.pfx:ro
+
+networks:
+  mytell-net:
+    driver: bridge
+  
+
+

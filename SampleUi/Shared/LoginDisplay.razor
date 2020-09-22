@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <AuthorizeView>
+                <Authorized>
+                    Hello, @context.User.Identity.Name!
+                    <br>
+                    <button class="btn btn-warning" @onclick="BeginSignOut">Log out</button>
+                    <br>
+                    <NavLink href="storiesfeed">Stories Feed</NavLink>
+                    <br>
+                    <NavLink href="mystorieslist">Story</NavLink>
+                    <br>
+                    <NavLink href="chatlist">ChatList</NavLink>
+                    <br>
+                    <button class="btn btn-warning" @onclick="ClearDbViewedStories">Очистить просмотренное</button>
+                </Authorized>
+                <NotAuthorized>
+                    <button class="btn btn-info" @onclick="RedirectToLogIn">Log in</button>
+                    <button class="btn btn-primary" @onclick="RedirectToLogIn">Registation</button>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</div>
+
+
+@code{
+
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+
+    private void RedirectToLogIn()
+    {
+        Navigation.NavigateTo("authentication/login");
+    }
+
+    private async Task ClearDbViewedStories()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        await Http.DeleteAsync($"https://localhost:5002/StoriesFeed/{state.User.Identity.Name}");
+    }
+
+}
