@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Radzen;
 
-namespace MyTell
+namespace SampleUi
 {
     public class Program
     {

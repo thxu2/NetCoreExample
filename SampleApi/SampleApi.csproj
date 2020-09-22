@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>MyTellApi</RootNamespace>
+        <RootNamespace>SampleApi</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

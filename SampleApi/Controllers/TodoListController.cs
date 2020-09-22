@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SampleApi.Domain;
 using SampleApi.Infrastructure;
 
-namespace MyTellApi.Controllers
+namespace SampleApi.Controlßlers
 {
     [Authorize]
     [ApiController]
