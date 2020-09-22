@@ -8,6 +8,6 @@ namespace SampleUi.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Owner { get; set; }
-        public IEnumerable<TodoListItem> Items { get; set; }
+        public IEnumerable<TodoListItem> Items { get; set; } = new List<TodoListItem>();
     }
 }

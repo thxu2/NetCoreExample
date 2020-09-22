@@ -11,14 +11,7 @@
                     Hello, @context.User.Identity.Name!
                     <br>
                     <button class="btn btn-warning" @onclick="BeginSignOut">Log out</button>
-                    <br>
-                    <NavLink href="storiesfeed">Stories Feed</NavLink>
-                    <br>
-                    <NavLink href="mystorieslist">Story</NavLink>
-                    <br>
-                    <NavLink href="chatlist">ChatList</NavLink>
-                    <br>
-                    <button class="btn btn-warning" @onclick="ClearDbViewedStories">Очистить просмотренное</button>
+                    <NavLink href="todoLists">TodoLists</NavLink>
                 </Authorized>
                 <NotAuthorized>
                     <button class="btn btn-info" @onclick="RedirectToLogIn">Log in</button>

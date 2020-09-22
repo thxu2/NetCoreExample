@@ -1,4 +1,4 @@
-﻿@page "/mystorieslist"
+﻿@page "/todoLists"
 @using Microsoft.AspNetCore.Authorization
 @using SampleUi.Models
 
@@ -9,10 +9,6 @@
 
 <div class="row justify-content-center">
     <div class="col-4">
-        <h1>Мои Рассказы</h1>
-        <RadzenButton Click="AddStory" Text="Написать рассказ" Style="margin-bottom: 20px; width: 150px" ButtonStyle="ButtonStyle.Primary"/>
-
-
         @if (_todoLists == null)
         {
             <p>
@@ -32,29 +28,55 @@
                                     @item.Name
                                 </div>
                             }
+                            <RadzenTextBox @bind-Value="_todoListItemName" Style="margin-bottom: 20px"/>
+                            <RadzenButton Click="@(()=>AddTodoListItem(list.Id))" Text="AddTodoListItem" Style="margin-bottom: 20px; width: 200px"/>
                         </RadzenAccordionItem>
                     }
                 </Items>
             </RadzenAccordion>
             <br/>
+
+            <RadzenTextBox @bind-Value="_todoListName" Style="margin-bottom: 20px"/>
+            <RadzenButton Click="@(AddTodoList)" Text="AddTodoList" Style="margin-bottom: 20px; width: 150px"/>
         }
     </div>
+
+
 </div>
 
 @code {
 
     private TodoList[] _todoLists;
+    private string _todoListName;
+    private string _todoListItemName;
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();   
+        await GetTodoLists();
+    }
+
+    private async Task GetTodoLists()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _todoLists = await Http.GetFromJsonAsync<TodoList[]>(
             $"https://localhost:5002/TodoList/{state.User.Identity.Name}");
     }
 
-    private void AddStory()
+    private async Task AddTodoList()
     {
-        Navigation.NavigateTo("addstory");
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var todoList = new TodoList {Name = _todoListName, Owner = state.User.Identity.Name};
+        await Http.PostAsJsonAsync("https://localhost:5002/TodoList", todoList);
+        await GetTodoLists();
+        StateHasChanged();
+    }
+
+    private async Task AddTodoListItem(Guid todoListId)
+    {
+        var todoList = new TodoListItem {Name = _todoListItemName, TodoListId = todoListId};
+        await Http.PostAsJsonAsync("https://localhost:5002/TodoList/Item", todoList);
+        await GetTodoLists();
+        StateHasChanged();
     }
 
 }

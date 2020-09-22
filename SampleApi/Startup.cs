@@ -29,7 +29,7 @@ namespace MyTellApi
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "identity:5003";
+                    options.Authority = "https://localhost:5000";
                     options.Audience = "sampleapi";
                     options.RequireHttpsMetadata = false;
                 });

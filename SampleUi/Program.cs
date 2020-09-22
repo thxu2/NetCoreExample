@@ -22,7 +22,7 @@ namespace SampleUi
                     var handler = sp.GetService<AuthorizationMessageHandler>()
                         .ConfigureHandler(
                             new[] {"https://localhost:5002"},
-                            new[] {"sample"});
+                            new[] {"sampleapi"});
 
                     return handler;
                 });
